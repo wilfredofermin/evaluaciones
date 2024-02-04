@@ -1,5 +1,6 @@
 import {
   Card,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -12,6 +13,7 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { gradientDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 import { type Question as QuestionType } from "../types";
+import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material";
 
 const getBackgroundColor = (info: QuestionType, index: number) => {
   const { userSelectedAnswer, correctAnswer } = info;
@@ -20,13 +22,14 @@ const getBackgroundColor = (info: QuestionType, index: number) => {
   if (userSelectedAnswer == null) return "transparent";
 
   // Si ya selecciono pero la soluccion es incorrecta
-  if(index !== correctAnswer && index !== userSelectedAnswer ) return 'transparent'
+  if (index !== correctAnswer && index !== userSelectedAnswer)
+    return "transparent";
 
   // si esta es la soluccion correcta
-  if(index === correctAnswer) return 'green'
+  if (index === correctAnswer) return "green";
 
   // Si esta es la seleccoin del usuario pero es la incorrecta
-  if(index === userSelectedAnswer) return 'red'
+  if (index === userSelectedAnswer) return "red";
 
   // Si no es ninguna de las anteriores
   return "transparent";
@@ -56,15 +59,13 @@ const Question = ({ info }: { info: QuestionType }) => {
         {info.answers.map((answer, index) => (
           <ListItem disablePadding key={index}>
             <ListItemButton
-            // onClick={handleClick(index)} //----> Opcion secundaria
-              
-            //  Aqui evitamos que el usuario vuelva a dar click
-              disabled ={info.userSelectedAnswer != null}
-            
-            //   Aqui el evento de seleccion de la respuesta
+              // onClick={handleClick(index)} //----> Opcion secundaria
+
+              //  Aqui evitamos que el usuario vuelva a dar click
+              disabled={info.userSelectedAnswer != null}
+              //   Aqui el evento de seleccion de la respuesta
               onClick={() => selectAnswer(info.id, index)}
-              
-            //    Aqui establecemos los colores segun la respuesta
+              //    Aqui establecemos los colores segun la respuesta
               sx={{ backgroundColor: getBackgroundColor(info, index) }}
               divider
             >
@@ -81,11 +82,36 @@ export const Game = () => {
   const questions = useQuetionsState((state) => state.questions);
   const currentQuestion = useQuetionsState((state) => state.currentQuestion);
 
+  const goNextQuestion = useQuetionsState((state) => state.goNextQuestion);
+  const goPreviusQuestion = useQuetionsState(
+    (state) => state.goPreviusQuestion
+  );
+
   const questionInfo = questions[currentQuestion];
 
   return (
-    <Stack>
+    <>
+      <Stack
+        direction={"row"}
+        gap={2}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
+        <IconButton
+          onClick={goPreviusQuestion}
+          disabled={currentQuestion === 0}
+        >
+          <ArrowBackIosNew />
+        </IconButton>
+        {currentQuestion + 1} / {questions.length}
+        <IconButton
+          onClick={goNextQuestion}
+          disabled={currentQuestion >= questions.length - 1}
+        >
+          <ArrowForwardIos />
+        </IconButton>
+      </Stack>
       <Question info={questionInfo} />
-    </Stack>
+    </>
   );
 };
