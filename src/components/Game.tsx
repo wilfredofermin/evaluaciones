@@ -13,16 +13,62 @@ import { gradientDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 import { type Question as QuestionType } from "../types";
 
+const getBackgroundColor = (info: QuestionType, index: number) => {
+  const { userSelectedAnswer, correctAnswer } = info;
+
+  // El usuario no ha seleccionado nada todavia
+  if (userSelectedAnswer == null) return "transparent";
+
+  // Si ya selecciono pero la soluccion es incorrecta
+  if(index !== correctAnswer && index !== userSelectedAnswer ) return 'transparent'
+
+  // si esta es la soluccion correcta
+  if(index === correctAnswer) return 'green'
+
+  // Si esta es la seleccoin del usuario pero es la incorrecta
+  if(index === userSelectedAnswer) return 'red'
+
+  // Si no es ninguna de las anteriores
+  return "transparent";
+};
+
 const Question = ({ info }: { info: QuestionType }) => {
+  // Obtemos la funcion del store
+  const selectAnswer = useQuetionsState((state) => state.selectAnswer);
+
+  //----> Opcion secundario
+  //Ahora haremos una funcion que llame a otra funcion. Esto con el objetivo de que primero obtener el answerIndex(index) y una vez obtendio le pasamos este paramtreo a la otra funcion.
+
+  // const handleClick =(answerIndex:number)=> ()=>{
+  //     selectAnswer(info.id,answerIndex)
+  // }
+
   return (
-    <Card variant="outlined" sx={{ textAlign: "left", p: 3, bgcolor: "#0f111a" }}>
+    <Card
+      variant="outlined"
+      sx={{ textAlign: "left", p: 3, bgcolor: "#0f111a" }}
+    >
       <Typography variant="h5">{info.question}</Typography>
-      <SyntaxHighlighter style={gradientDark} lenguage ='javascript'>{info.code} </SyntaxHighlighter>
+      <SyntaxHighlighter style={gradientDark} lenguage="javascript">
+        {info.code}{" "}
+      </SyntaxHighlighter>
       <List sx={{ bgcolor: "#444444" }} disablePadding>
         {info.answers.map((answer, index) => (
           <ListItem disablePadding key={index}>
-            <ListItemButton divider>
-              <ListItemText primary={answer} sx={{ textAlign:'center'}} />
+            <ListItemButton
+            // onClick={handleClick(index)} //----> Opcion secundaria
+              
+            //  Aqui evitamos que el usuario vuelva a dar click
+              disabled ={info.userSelectedAnswer != null}
+            
+            //   Aqui el evento de seleccion de la respuesta
+              onClick={() => selectAnswer(info.id, index)}
+              
+            //    Aqui establecemos los colores segun la respuesta
+              sx={{ backgroundColor: getBackgroundColor(info, index) }}
+              divider
+            >
+              <ListItemText primary={answer} sx={{ textAlign: "center" }} />
             </ListItemButton>
           </ListItem>
         ))}
