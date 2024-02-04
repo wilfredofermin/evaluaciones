@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { type Question } from "../types";
+import confetti from 'canvas-confetti';
 
 interface State {
   questions: Question[]; //----> Aqui recibire las pregutas tipadas
@@ -43,6 +44,8 @@ export const useQuetionsState = create<State>((set, get) => {
 
       //Ahora ya con los datos(questionInfo) validamos si el usuario ha hecho bien la respuesta. Este valos nos llega como parametro(answerIndex)
       const isCorrectoSelectAnswer = questionInfo.correctAnswer === answerIndex
+
+      if(isCorrectoSelectAnswer) confetti()
 
       //Modificamos los datos mutados para posteor actualizar
       newQuestions[questionIndex] ={
