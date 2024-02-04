@@ -97,6 +97,7 @@ export const Game = () => {
         gap={2}
         alignItems={"center"}
         justifyContent={"center"}
+        marginBottom={4}
       >
         <IconButton
           onClick={goPreviusQuestion}
