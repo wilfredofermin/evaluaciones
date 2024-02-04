@@ -15,14 +15,14 @@ import { type Question as QuestionType } from "../types";
 
 const Question = ({ info }: { info: QuestionType }) => {
   return (
-    <Card variant="outlined" sx={{ textAlign: "left", p: 3, bgcolor: "black" }}>
+    <Card variant="outlined" sx={{ textAlign: "left", p: 3, bgcolor: "#0f111a" }}>
       <Typography variant="h5">{info.question}</Typography>
       <SyntaxHighlighter style={gradientDark} lenguage ='javascript'>{info.code} </SyntaxHighlighter>
-      <List sx={{ bgcolor: "gray" }}>
+      <List sx={{ bgcolor: "#444444" }} disablePadding>
         {info.answers.map((answer, index) => (
           <ListItem disablePadding key={index}>
-            <ListItemButton>
-              <ListItemText primary={answer} />
+            <ListItemButton divider>
+              <ListItemText primary={answer} sx={{ textAlign:'center'}} />
             </ListItemButton>
           </ListItem>
         ))}

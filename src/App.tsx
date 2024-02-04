@@ -13,7 +13,7 @@ function App() {
 
   return (
     <Container maxWidth="lg">
-      <Stack direction="row" spacing={2} justifyContent={'center'}>
+      <Stack direction="row" spacing={2} justifyContent={'center'} sx={{mb:6}}>
         <JavaScriptLogo />
         <Typography variant="h3">
           Evaluaciones
